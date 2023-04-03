@@ -1,4 +1,9 @@
+// main.c
+// Řešení IJC-DU2, příklad 1), 18.4.2023
+// Autor: Matyáš Oujezdský, FIT
+// Přeloženo: clang version 10.0.0-4ubuntu1
 #include <stdio.h>
+#include <stdlib.h>
 #include "htab.h"
 
 struct htab_item {
@@ -103,15 +108,15 @@ void htab_clear(htab_t *t) {
         tmp_ptr = t->arr_ptr[i];
         while (!tmp_ptr) {
             tmp_ptr = t->arr_ptr[i]->next;
-            free(t->arr_ptr[i]->data.key);
+            free((char*)(t->arr_ptr[i]->data.key));
             free(t->arr_ptr[i]);
         }
     }
-
-    free(t->arr_ptr);
 }
 
 void htab_free(htab_t *t) {
+    htab_clear(t);
+    free(t->arr_ptr);
 }
 
 void htab_statistics(const htab_t *t) {

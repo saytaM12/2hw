@@ -139,14 +139,10 @@ void print_help(char *file_name) {
     printf("Print the last 10 lines of each FILE to standard output.\n\n\
 With no FILE, read standard input.\n\n\
 Mandatory arguments to long options are mandatory for short options too.\n\n\
-OPTION%30sFUNCTION\n",
-           "");
-    printf("-n, --number NUM%20soutput the last NUM lines (NUM must be > 1),\n\
-%38sinstead of the last 10\n\n",
-           "", "");
-    printf("-h, --help%26soutput the last NUM lines (NUM must be > 1),\n\
-%38sinstead of the last 10\n",
-           "", "");
+OPTION%30sFUNCTION\n", "");
+    printf("-n, --number NUM%20soutput the last NUM lines (NUM must be > 0),\n\
+%38sinstead of the last 10\n\n", "", "");
+    printf("-h, --help%26sprints this help\n", "");
 }
 
 int main(int argc, char **argv) {

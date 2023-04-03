@@ -3,3 +3,4 @@ main
 tail
 test*
 chatgpt.c
+*.o
