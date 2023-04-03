@@ -51,7 +51,7 @@ size_t htab_bucket_count(const htab_t *t) {
 htab_pair_t *htab_find(const htab_t *t, htab_key_t key) {
     size_t index = (htab_hash_function(key) % t->arr_size);
     struct htab_item* curr_item = t->arr_ptr[index];
-    while (curr_item->next != NULL) {
+    while (!curr_item->next) {
         if (strcmp(curr_item->data.key, key) == 0) {
             return &(curr_item->data);
         }
@@ -84,7 +84,7 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
 
     size_t index = (htab_hash_function(key) % t->arr_size);
     struct htab_item* curr_item = t->arr_ptr[index];
-    while (curr_item->next != NULL) {
+    while (!curr_item->next) {
         curr_item = curr_item->next;
     }
 
@@ -98,6 +98,17 @@ void htab_for_each(const htab_t *t, void (*f)(htab_pair_t *data)) {
 }
 
 void htab_clear(htab_t *t) {
+    struct htab_item *tmp_ptr;
+    for (int i = 0; i < t->arr_size; ++i) {
+        tmp_ptr = t->arr_ptr[i];
+        while (!tmp_ptr) {
+            tmp_ptr = t->arr_ptr[i]->next;
+            free(t->arr_ptr[i]->data.key);
+            free(t->arr_ptr[i]);
+        }
+    }
+
+    free(t->arr_ptr);
 }
 
 void htab_free(htab_t *t) {
