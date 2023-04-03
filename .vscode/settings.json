@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/user/coding/ijc/2hw",
+            "binaryPath": "/home/user/coding/ijc/2hw/tail",
+            "binaryArgs": []
+        }
+    ]
+}
