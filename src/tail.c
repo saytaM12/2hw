@@ -88,7 +88,7 @@ void cb_free(cb_t *cb) {
 
 // reads file by character and at each \n sends the line to cb_put
 void read_file(cb_t *cb, FILE *stream) {
-    char tmp_char;
+    int tmp_char;
     char *tmp_string = malloc(MAX_LINE_SIZE);
     if (!tmp_string) {
         fputs("couldn't allocate memory for tmp_string", stderr);

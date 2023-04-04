@@ -1,22 +1,24 @@
 CC := clang
-CFLAGS := -g -Wall -std=c11 -pedantic -Wextra -O3 -fsanitize=address
+CFLAGS := -g -Wall -std=c11 -pedantic -Wextra -O0 -fsanitize=address
 CREATEDIR := $(shell mkdir -p obj)
 
 .PHONY: all
-all: tail #wordcount wordcount-dynamic
+all: tail wordcount #wordcount-dynamic
 # a knihovny "libhtab.a", "libhtab.so
 
 tail: obj/tail.o
 	$(CC) $(CFLAGS) -lm $^ -o $@
 
-#												\
-wordcount: obj/wordcount.o obj/htab.o			\
-	$(CC) $(CFLAGS) -lm $^ -o $@				\
-												\
-wordcount-dynamic: obj/wordcount.o obj/htab.o	\
+wordcount: obj/io.o obj/htab.o obj/wordcount.o
 	$(CC) $(CFLAGS) -lm $^ -o $@
 
 
+#wordcount-dynamic: obj/wordcount.o obj/htab.o
+#	$(CC) $(CFLAGS) -lm $^ -o $@
+
+obj/wordcount.o: src/wordcount.c src/io.h src/htab.h
+obj/io.o: src/io.c
+obj/htab.o: src/htab.c src/htab.h
 obj/tail.o: src/tail.c
 
 obj/%.o: src/%.c
@@ -25,4 +27,4 @@ obj/%.o: src/%.c
 
 .PHONY: clean
 clean:
-	-rm -r ./obj/ primes primes-i steg-decode
+	-rm -r ./obj/ tail wordcount

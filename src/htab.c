@@ -4,17 +4,18 @@
 // Přeloženo: clang version 10.0.0-4ubuntu1
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "htab.h"
 
 struct htab_item {
     struct htab_pair data;
-    struct htab_item* next;
+    struct htab_item *next;
 };
 
 struct htab {
     size_t size;
     size_t arr_size;
-    struct htab_item** arr_ptr;
+    struct htab_item **arr_ptr;
 };
 
 size_t htab_hash_function(htab_key_t str) {
@@ -32,7 +33,7 @@ htab_t *htab_init(const size_t n) {
         return NULL;
     }
 
-    t->arr_ptr = malloc(n * sizeof(struct htab_item*));
+    t->arr_ptr = calloc(n, sizeof(struct htab_item*));
     if (!t->arr_ptr) {
         fputs("couldn't allocate memory for array of pointers", stderr);
         free(t);
@@ -55,8 +56,8 @@ size_t htab_bucket_count(const htab_t *t) {
 
 htab_pair_t *htab_find(const htab_t *t, htab_key_t key) {
     size_t index = (htab_hash_function(key) % t->arr_size);
-    struct htab_item* curr_item = t->arr_ptr[index];
-    while (!curr_item->next) {
+    struct htab_item *curr_item = t->arr_ptr[index];
+    while (curr_item) {
         if (strcmp(curr_item->data.key, key) == 0) {
             return &(curr_item->data);
         }
@@ -68,48 +69,65 @@ htab_pair_t *htab_find(const htab_t *t, htab_key_t key) {
 
 htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
     htab_pair_t *return_pair;
-    if (return_pair = htab_find(t, key)) {
+    if ((return_pair = htab_find(t, key))) {
         return_pair->value++;
         return return_pair;
     }
 
-    struct htab_item *item_to_add = malloc(sizeof(struct htab_item));
+    struct htab_item *item_to_add = calloc(1, sizeof(struct htab_item));
     if (!item_to_add) {
         fputs("couldn't allocate memory for item to add", stderr);
         return NULL;
     }
-    struct htab_pair data_to_add = {.key = malloc(sizeof(key)), .value = 1};
-    if (!data_to_add.key) {
+
+    size_t key_size = strlen(key) + 1;
+    char *key_to_add = malloc(key_size);
+    if (!key_to_add) {
         fputs("couldn't allocate memory for key in item to add", stderr);
         free(item_to_add);
         return NULL;
     }
-    data_to_add.key = key;
+
+    memcpy(key_to_add, key, key_size);
+    struct htab_pair data_to_add = {.key = key_to_add, .value = 1};
     item_to_add->data = data_to_add;
 
     size_t index = (htab_hash_function(key) % t->arr_size);
-    struct htab_item* curr_item = t->arr_ptr[index];
-    while (!curr_item->next) {
+    struct htab_item *curr_item = t->arr_ptr[index];
+    if (!curr_item) {
+        t->arr_ptr[index] = item_to_add;
+        return return_pair;
+    }
+    while (curr_item->next) {
         curr_item = curr_item->next;
     }
 
     curr_item->next = item_to_add;
+
+    return return_pair;
 }
 
 bool htab_erase(htab_t *t, htab_key_t key) {
+    (void)t;
+    (void)key;
+    return true;
 }
 
 void htab_for_each(const htab_t *t, void (*f)(htab_pair_t *data)) {
+    (void)t;
+    (void)f;
+
 }
 
 void htab_clear(htab_t *t) {
     struct htab_item *tmp_ptr;
-    for (int i = 0; i < t->arr_size; ++i) {
+    for (size_t i = 0; i < t->arr_size; ++i) {
         tmp_ptr = t->arr_ptr[i];
-        while (!tmp_ptr) {
-            tmp_ptr = t->arr_ptr[i]->next;
-            free((char*)(t->arr_ptr[i]->data.key));
-            free(t->arr_ptr[i]);
+        while (tmp_ptr) {
+            struct htab_item *curr = tmp_ptr;
+            tmp_ptr = tmp_ptr->next;
+            free((char*)curr->data.key);
+            free(curr);
         }
     }
 }
@@ -117,7 +135,10 @@ void htab_clear(htab_t *t) {
 void htab_free(htab_t *t) {
     htab_clear(t);
     free(t->arr_ptr);
+    free(t);
 }
 
 void htab_statistics(const htab_t *t) {
+    (void)t;
+
 }
