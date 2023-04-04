@@ -8,7 +8,7 @@
 #include "htab.h"
 
 struct htab_item {
-    struct htab_pair data;
+    htab_pair_t data;
     struct htab_item *next;
 };
 
@@ -114,9 +114,14 @@ bool htab_erase(htab_t *t, htab_key_t key) {
 }
 
 void htab_for_each(const htab_t *t, void (*f)(htab_pair_t *data)) {
-    (void)t;
-    (void)f;
-
+    struct htab_item *tmp_ptr;
+    for (size_t i = 0; i < t->arr_size; ++i) {
+        tmp_ptr = t->arr_ptr[i];
+        while (tmp_ptr) {
+            f(&tmp_ptr->data);
+            tmp_ptr = tmp_ptr->next;
+        }
+    }
 }
 
 void htab_clear(htab_t *t) {

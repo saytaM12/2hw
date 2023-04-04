@@ -8,17 +8,24 @@
 #include "htab.h"
 
 
+void each(htab_pair_t *data) {
+    printf("%s, %d\n", data->key, data->value);
+}
+
 int main() {
     char *s = malloc(255);
     htab_t *t = htab_init(10);
-    htab_pair_t *pair;
 
     while (read_word(s, 255, stdin)) {
         htab_lookup_add(t, s);
     }
 
-    pair = htab_find(t, s);
-    printf("%s, %d\n", pair->key, pair->value);
+
+
+
+    htab_for_each(t, each);
+
+
     free(s);
     htab_free(t);
 }

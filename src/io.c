@@ -15,7 +15,14 @@ int read_word(char *s, int max, FILE *f) {
     bool discard_rest = false;
 
     int i = 0;
-    while ((tmp_char = fgetc(f)) != EOF && !isspace(tmp_char)) {
+    while ((tmp_char = fgetc(f)) != EOF && isspace(tmp_char))
+        ;
+
+    if (tmp_char == EOF) {
+        return i;
+    }
+
+    do {
         if (i + 1 >= max) {
             if (!exceeded) {
                 fputs("exceeded max word length\n", stderr);
@@ -29,7 +36,7 @@ int read_word(char *s, int max, FILE *f) {
             s[i] = tmp_char;
             ++i;
         }
-    }
+    } while ((tmp_char = fgetc(f)) != EOF && !isspace(tmp_char));
 
     s[i] = 0;
 
