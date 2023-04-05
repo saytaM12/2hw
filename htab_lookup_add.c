@@ -3,6 +3,7 @@
 // Autor: Matyáš Oujezdský, FIT
 // Přeloženo: clang version 10.0.0-4ubuntu1
 #include <stdio.h>
+#include <stdlib.h>
 #include "private_htab.h"
 
 htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {

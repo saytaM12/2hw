@@ -3,6 +3,7 @@
 // Autor: Matyáš Oujezdský, FIT
 // Přeloženo: clang version 10.0.0-4ubuntu1
 #include <stdio.h>
+#include <stdlib.h>
 #include "private_htab.h"
 
 htab_t *htab_init(const size_t n) {

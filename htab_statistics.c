@@ -2,6 +2,7 @@
 // Řešení IJC-DU2, příklad 1), 18.4.2023
 // Autor: Matyáš Oujezdský, FIT
 // Přeloženo: clang version 10.0.0-4ubuntu1
+#include <stdio.h>
 #include "private_htab.h"
 
 void htab_statistics(const htab_t *t) {
