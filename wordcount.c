@@ -7,23 +7,20 @@
 #include "io.h"
 #include "htab.h"
 
-#define MAX_WORD_SIZE 255
 
 void each(htab_pair_t *data) {
     printf("%s:\t%d\n", data->key, data->value);
 }
 
 int main() {
-    char *s = malloc(MAX_WORD_SIZE);
-    htab_t *t = htab_init(1000000000);
+    char *s = malloc(255);
+    htab_t *t = htab_init(10);
 
-    while (read_word(s, MAX_WORD_SIZE, stdin)) {
+    while (read_word(s, 255, stdin)) {
         htab_lookup_add(t, s);
     }
 
-//    htab_for_each(t, each);
-//
-//    htab_statistics(t);
+    htab_for_each(t, each);
 
     free(s);
     htab_free(t);

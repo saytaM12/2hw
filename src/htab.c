@@ -99,11 +99,11 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
         t->arr_ptr[index] = item_to_add;
         return return_pair;
     }
-
-    item_to_add->next = t->arr_ptr[index]->next;
-    t->arr_ptr[index]->next = item_to_add;
-
-    return return_pair;
+    else {
+        item_to_add->next = t->arr_ptr[index];
+        t->arr_ptr[index] = item_to_add;
+        return return_pair;
+    }
 }
 
 bool htab_erase(htab_t *t, htab_key_t key) {
@@ -174,15 +174,15 @@ void htab_free(htab_t *t) {
 
 void htab_statistics(const htab_t *t) {
     struct htab_item *tmp_ptr;
-    int item_count;
-    int nonempty_count;
+    int item_count = 0;
+    float nonempty_count = 0;
     int min = 0;
     int max = 0;
     double avg = 0;
     for (size_t i = 0; i < t->arr_size; ++i) {
         tmp_ptr = t->arr_ptr[i];
 
-        if (tmp_ptr) {
+        if (tmp_ptr->next) {
             ++nonempty_count;
         }
 
@@ -196,11 +196,15 @@ void htab_statistics(const htab_t *t) {
             max = item_count;
         }
 
-        if (min > item_count) {
+        if (min > item_count || min == 0) {
             min = item_count;
         }
     }
-    avg = nonempty_count / t->size;
+    avg = t->size / nonempty_count;
+
+    printf("min: %d\n", min);
+    printf("max: %d\n", max);
+    printf("avg: %lf\n", avg);
 
 }
 

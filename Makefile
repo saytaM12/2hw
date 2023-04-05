@@ -1,10 +1,13 @@
 CC := clang
-CFLAGS := -g -Wall -std=c11 -pedantic -Wextra -O0 -fsanitize=address
+CFLAGS := -g -Wall -std=c11 -pedantic -DSTATISTICS -Wextra -O3
 CREATEDIR := $(shell mkdir -p obj)
 
 .PHONY: all
 all: tail wordcount #wordcount-dynamic
 # a knihovny "libhtab.a", "libhtab.so
+
+cpp: src/to_je_jedno.cpp
+	clang++ -O3 $^ -o $@
 
 tail: obj/tail.o
 	$(CC) $(CFLAGS) -lm $^ -o $@
@@ -27,4 +30,4 @@ obj/%.o: src/%.c
 
 .PHONY: clean
 clean:
-	-rm -r ./obj/ tail wordcount
+	-rm -r ./obj/ tail wordcount cpp
