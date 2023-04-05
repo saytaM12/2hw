@@ -74,6 +74,8 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
         return return_pair;
     }
 
+    t->size++;
+
     struct htab_item *item_to_add = calloc(1, sizeof(struct htab_item));
     if (!item_to_add) {
         fputs("couldn't allocate memory for item to add", stderr);
@@ -108,9 +110,34 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
 }
 
 bool htab_erase(htab_t *t, htab_key_t key) {
-    (void)t;
-    (void)key;
-    return true;
+    size_t index = (htab_hash_function(key) % t->arr_size);
+    struct htab_item *curr_item = t->arr_ptr[index];
+    struct htab_item *last_item;
+
+    if (!curr_item) {
+        return false;
+    }
+
+    if (strcmp(curr_item->data.key, key) == 0) {
+        t->arr_ptr[index] = curr_item->next;
+        free((char*)curr_item->data.key);
+        free(curr_item);
+        t->size--;
+        return true;
+    }
+
+    while (curr_item) {
+        if (strcmp(curr_item->data.key, key) == 0) {
+            last_item->next = curr_item->next;
+            free((char*)curr_item->data.key);
+            free(curr_item);
+            t->size--;
+            return true;
+        }
+        last_item = curr_item;
+        curr_item = curr_item->next;
+    }
+    return false;
 }
 
 void htab_for_each(const htab_t *t, void (*f)(htab_pair_t *data)) {
@@ -129,13 +156,16 @@ void htab_clear(htab_t *t) {
     for (size_t i = 0; i < t->arr_size; ++i) {
         tmp_ptr = t->arr_ptr[i];
         while (tmp_ptr) {
-            struct htab_item *curr = tmp_ptr;
+            struct htab_item *curr_ptr = tmp_ptr;
             tmp_ptr = tmp_ptr->next;
-            free((char*)curr->data.key);
-            free(curr);
+            free((char*)curr_ptr->data.key);
+            free(curr_ptr);
         }
     }
+
+    t->size = 0;
 }
+
 
 void htab_free(htab_t *t) {
     htab_clear(t);
@@ -143,7 +173,34 @@ void htab_free(htab_t *t) {
     free(t);
 }
 
+#ifdef STATISTICS
+
 void htab_statistics(const htab_t *t) {
-    (void)t;
+    struct htab_item *tmp_ptr;
+    int count;
+    int min = 0;
+    int max = 0;
+    double avg = 0;
+    for (size_t i = 0; i < t->arr_size; ++i) {
+        tmp_ptr = t->arr_ptr[i];
+        count = 0;
+        while (tmp_ptr) {
+            ++count;
+            tmp_ptr = tmp_ptr->next;
+        }
+
+        avg += count;
+
+        if (max < count) {
+            max = count;
+        }
+
+        if (min > count) {
+            min = count;
+        }
+    }
+    avg /= t->arr_size;
 
 }
+
+#endif //STATISTICS

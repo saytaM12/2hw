@@ -9,7 +9,7 @@
 
 
 void each(htab_pair_t *data) {
-    printf("%s, %d\n", data->key, data->value);
+    printf("%s:\t%d\n", data->key, data->value);
 }
 
 int main() {
