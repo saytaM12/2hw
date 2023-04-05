@@ -1,4 +1,4 @@
-// main.c
+// htab.c
 // Řešení IJC-DU2, příklad 1), 18.4.2023
 // Autor: Matyáš Oujezdský, FIT
 // Přeloženo: clang version 10.0.0-4ubuntu1
@@ -74,8 +74,6 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
         return return_pair;
     }
 
-    t->size++;
-
     struct htab_item *item_to_add = calloc(1, sizeof(struct htab_item));
     if (!item_to_add) {
         fputs("couldn't allocate memory for item to add", stderr);
@@ -90,21 +88,20 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
         return NULL;
     }
 
+    t->size++;
+
     memcpy(key_to_add, key, key_size);
     struct htab_pair data_to_add = {.key = key_to_add, .value = 1};
     item_to_add->data = data_to_add;
 
     size_t index = (htab_hash_function(key) % t->arr_size);
-    struct htab_item *curr_item = t->arr_ptr[index];
-    if (!curr_item) {
+    if (!t->arr_ptr[index]) {
         t->arr_ptr[index] = item_to_add;
         return return_pair;
     }
-    while (curr_item->next) {
-        curr_item = curr_item->next;
-    }
 
-    curr_item->next = item_to_add;
+    item_to_add->next = t->arr_ptr[index]->next;
+    t->arr_ptr[index] = item_to_add;
 
     return return_pair;
 }
@@ -177,29 +174,33 @@ void htab_free(htab_t *t) {
 
 void htab_statistics(const htab_t *t) {
     struct htab_item *tmp_ptr;
-    int count;
+    int item_count;
+    int nonempty_count;
     int min = 0;
     int max = 0;
     double avg = 0;
     for (size_t i = 0; i < t->arr_size; ++i) {
         tmp_ptr = t->arr_ptr[i];
-        count = 0;
+
+        if (tmp_ptr) {
+            ++nonempty_count;
+        }
+
+        item_count = 0;
         while (tmp_ptr) {
-            ++count;
+            ++item_count;
             tmp_ptr = tmp_ptr->next;
         }
 
-        avg += count;
-
-        if (max < count) {
-            max = count;
+        if (max < item_count) {
+            max = item_count;
         }
 
-        if (min > count) {
-            min = count;
+        if (min > item_count) {
+            min = item_count;
         }
     }
-    avg /= t->arr_size;
+    avg = nonempty_count / t->size;
 
 }
 
