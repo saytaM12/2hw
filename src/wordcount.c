@@ -23,7 +23,7 @@ int main() {
 
 //    htab_for_each(t, each);
 //
-//    htab_statistics(t);
+    htab_statistics(t);
 
     free(s);
     htab_free(t);

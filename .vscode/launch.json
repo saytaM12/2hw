@@ -12,7 +12,7 @@
             "env": {
                 "ASAN_OPTIONS": "detect_leaks=0"
             },
-            //"stdio": "src/tail.c"
+            "stdio": "test1"
         }
     ]
 }

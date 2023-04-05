@@ -1,5 +1,5 @@
 CC := clang
-CFLAGS := -g -Wall -std=c11 -pedantic -DSTATISTICS -Wextra -O3
+CFLAGS := -g -Wall -std=c11 -pedantic -DSTATISTICS -Wextra -O0 -fsanitize=address
 CREATEDIR := $(shell mkdir -p obj)
 
 .PHONY: all

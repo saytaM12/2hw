@@ -174,17 +174,18 @@ void htab_free(htab_t *t) {
 
 void htab_statistics(const htab_t *t) {
     struct htab_item *tmp_ptr;
-    int item_count = 0;
-    float nonempty_count = 0;
-    int min = 0;
-    int max = 0;
+    size_t item_count = 0;
+    double nonempty_count = 0;
+    size_t min = 0;
+    size_t max = 0;
     double avg = 0;
     for (size_t i = 0; i < t->arr_size; ++i) {
-        tmp_ptr = t->arr_ptr[i];
-
-        if (tmp_ptr->next) {
-            ++nonempty_count;
+        if (!t->arr_ptr[i]) {
+            continue;
         }
+
+        tmp_ptr = t->arr_ptr[i];
+        ++nonempty_count;
 
         item_count = 0;
         while (tmp_ptr) {
@@ -202,8 +203,8 @@ void htab_statistics(const htab_t *t) {
     }
     avg = t->size / nonempty_count;
 
-    printf("min: %d\n", min);
-    printf("max: %d\n", max);
+    printf("min: %zu\n", min);
+    printf("max: %zu\n", max);
     printf("avg: %lf\n", avg);
 
 }
