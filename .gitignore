@@ -1,6 +1,6 @@
 obj
 main
 tail
+wordcount*
 test*
 chatgpt.c
-*.o

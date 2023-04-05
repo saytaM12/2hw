@@ -101,7 +101,7 @@ htab_pair_t *htab_lookup_add(htab_t *t, htab_key_t key) {
     }
 
     item_to_add->next = t->arr_ptr[index]->next;
-    t->arr_ptr[index] = item_to_add;
+    t->arr_ptr[index]->next = item_to_add;
 
     return return_pair;
 }
