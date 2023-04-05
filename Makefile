@@ -32,4 +32,4 @@ lib/libhtab.so: obj/htab_bucket_count.o obj/htab_clear.o obj/htab_erase.o obj/ht
 
 .PHONY: clean
 clean:
-	-rm -r ./lib/ ./obj/ tail wordcount* cpp
+	-rm -r ./lib/ ./obj/ tail wordcount wordcount-dynamic cpp dep.d
