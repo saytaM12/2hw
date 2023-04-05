@@ -16,12 +16,12 @@ wordcount: obj/io.o obj/htab.o obj/wordcount.o
 #wordcount-dynamic: obj/wordcount.o obj/htab.o
 #	$(CC) $(CFLAGS) -lm $^ -o $@
 
-obj/wordcount.o: src/wordcount.c src/io.h src/htab.h
-obj/io.o: src/io.c
-obj/htab.o: src/htab.c src/htab.h
-obj/tail.o: src/tail.c
+obj/wordcount.o: wordcount.c io.h htab.h
+obj/io.o: io.c
+obj/htab.o: htab.c htab.h
+obj/tail.o: tail.c
 
-obj/%.o: src/%.c
+obj/%.o: %.c
 	$(CC) $(CFLAGS) $< -c -o $@
 
 
