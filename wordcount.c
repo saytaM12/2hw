@@ -23,7 +23,11 @@ int main() {
 
     htab_for_each(t, each);
 
-//    htab_statistics(t);
+    #ifdef STATISTICS
+
+    htab_statistics(t);
+
+    #endif // STATISTICS
 
     free(s);
     htab_free(t);

@@ -9,9 +9,6 @@ all: tail wordcount wordcount-dynamic
 
 -include dep.d
 
-cpp: to_je_jedno.cpp
-	clang++ -O3 $^ -o $@
-
 tail: obj/tail.o
 	$(CC) $(CFLAGS) $^ -o $@
 
@@ -32,4 +29,4 @@ lib/libhtab.so: obj/htab_bucket_count.o obj/htab_clear.o obj/htab_erase.o obj/ht
 
 .PHONY: clean
 clean:
-	-rm -r ./lib/ ./obj/ tail wordcount wordcount-dynamic cpp dep.d
+	-rm -r ./lib/ ./obj/ tail wordcount wordcount-dynamic dep.d
