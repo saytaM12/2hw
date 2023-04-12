@@ -134,15 +134,15 @@ void read_file(cb_t *cb, FILE *stream) {
 }
 
 // print help (kind of self-explainatory)
-void print_help(char *file_name) {
-    printf("Usage: %s [OPTION] [FILE]\n", file_name);
-    printf("Print the last 10 lines of each FILE to standard output.\n\n\
+void print_help(char *file_name, FILE *stream) {
+    fprintf(stream, "Usage: %s [OPTION] [FILE]\n", file_name);
+    fprintf(stream, "Print the last 10 lines of each FILE to standard output.\n\n\
 With no FILE, read standard input.\n\n\
 Mandatory arguments to long options are mandatory for short options too.\n\n\
 OPTION%30sFUNCTION\n", "");
-    printf("-n, --number NUM%20soutput the last NUM lines (NUM must be > 0),\n\
+    fprintf(stream, "-n, --number NUM%20soutput the last NUM lines (NUM must be > 0),\n\
 %38sinstead of the last 10\n\n", "", "");
-    printf("-h, --help%26sprints this help\n", "");
+    fprintf(stream, "-h, --help%26sprints this help\n", "");
 }
 
 int main(int argc, char **argv) {
@@ -158,7 +158,7 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
         // a argument -h or --help was passed, so print help
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            print_help(argv[0]);
+            print_help(argv[0], stdout);
             return 0;
         }
 
@@ -175,14 +175,14 @@ int main(int argc, char **argv) {
 
                 // this happens with numbers too big or negative
                 if (size > LONG_MAX) {
-                    print_help(argv[0]);
+                    print_help(argv[0], stderr);
                     return 1;
                 }
             }
 
             // if the number is zero or not inputed
             if (size == 0 || argc <= i + 1) {
-                print_help(argv[0]);
+                print_help(argv[0], stderr);
                 return 1;
             }
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
             file_read = true;
             stream = fopen(argv[i], "r");
             if (!stream) {
-                fprintf(stderr, "Counldn't open a file with name %s\n", argv[i]);
+                fprintf(stderr, "Couldn't open a file with name %s\n", argv[i]);
                 return 1;
             }
         }

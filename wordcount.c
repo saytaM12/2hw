@@ -13,7 +13,7 @@ void each(htab_pair_t *data) {
     printf("%s\t%d\n", data->key, data->value);
 }
 
-int main() {
+int main(void) {
     char *s = malloc(MAX_WORD_SIZE);
     htab_t *t = htab_init(10000);
 
